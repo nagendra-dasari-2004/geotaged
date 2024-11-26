@@ -3,88 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-.container {
-    padding: 20px;
-}
-
-h1 {
-    color: #333;
-}
-
-video {
-    width: 100%;
-    max-width: 500px;
-    margin: 20px auto;
-    border: 2px solid #ccc;
-}
-
-#scanned-result {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-#link-container {
-    margin-top: 20px;
-}
-
-a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-    </style>
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>QR Code Scanner</h1>
-        <video id="qr-video" autoplay playsinline></video>
-        <p id="scanned-result">Scan a QR code to get the link.</p>
-        <div id="link-container" style="display: none;">
-            <p>Scanned URL:</p>
-            <a id="scanned-link" href="#" target="_blank">Open Link</a>
-        </div>
+        <h1>QR Code Generator</h1>
+        <input type="text" id="url-input" value="https://nagendra-d-2004.github.io/geotaged/h/" readonly>
+        <button id="generate-qr">Generate QR Code</button>
+        <div id="qr-code"></div>
+        <p>Scan this QR code to continue.</p>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6"></script>
-    <script >
-        const video = document.getElementById('qr-video');
-const scannedResult = document.getElementById('scanned-result');
-const linkContainer = document.getElementById('link-container');
-const scannedLink = document.getElementById('scanned-link');
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        const generateQR = document.getElementById('generate-qr');
+        const qrCodeContainer = document.getElementById('qr-code');
 
-// Initialize the ZXing Barcode Reader
-const codeReader = new ZXing.BrowserQRCodeReader();
-
-// Start video stream and scan
-codeReader.decodeFromVideoDevice(undefined, video, (result, err) => {
-    if (result) {
-        // QR Code detected
-        const url = result.text;
-        scannedResult.textContent = "QR Code Scanned Successfully!";
-        linkContainer.style.display = "block";
-        scannedLink.href = url;
-        scannedLink.textContent = url;
-    }
-    if (err && !(err instanceof ZXing.NotFoundException)) {
-        console.error("Error decoding QR code:", err);
-    }
-});
-
+        generateQR.addEventListener('click', () => {
+            const url = document.getElementById('url-input').value;
+            QRCode.toCanvas(qrCodeContainer, url, { width: 200 }, (error) => {
+                if (error) console.error(error);
+                console.log('QR Code generated successfully!');
+            });
+        });
     </script>
 </body>
 </html>
